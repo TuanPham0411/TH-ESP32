@@ -1,0 +1,16 @@
+[
+  {
+    "filename": "xiaozhi-copper-robot-v2.4.0-esp32s3.bin",
+    "title": "Firmware hợp nhất ESP32-S3 2.4.0",
+    "kind": "firmware",
+    "size": 9164022,
+    "sha256": "c8e77c6e00c9e38dcd8c0b48ee637a8c37d8aa376dbcfa7ac51cd2bad25bba5a"
+  },
+  {
+    "filename": "xiaozhi-copper-robot-2.4.0-complete.zip",
+    "title": "Gói offline: firmware và hướng dẫn",
+    "kind": "firmware",
+    "size": 4494118,
+    "sha256": "f06fa044438f9e12309422f6c6691049118b472012ce149ecbe6c220ade63ef0"
+  }
+]

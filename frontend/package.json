@@ -1,0 +1,14 @@
+{
+  "name": "th-esp32-installer",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "dependencies": {
+    "esp-web-tools": "10.4.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12"
+  }
+}

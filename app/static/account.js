@@ -1,0 +1,14 @@
+'use strict';
+const form=document.getElementById('device-form'),message=document.getElementById('device-message'),list=document.getElementById('device-list');
+async function loadDevices(){
+ const response=await fetch('/api/devices'),data=await response.json();list.replaceChildren();
+ if(!data.robots?.length){list.textContent='Bạn chưa liên kết thiết bị.';return}
+ for(const device of data.robots){const row=document.createElement('div');row.className='device';const info=document.createElement('div'),name=document.createElement('b'),mac=document.createElement('code'),sid=document.createElement('code'),remove=document.createElement('button');name.textContent=device.name;mac.textContent=device.mac;sid.textContent=device.sid;info.append(name,mac,sid);remove.className='button';remove.textContent='Bỏ liên kết';remove.onclick=async()=>{const r=await fetch('/api/devices/'+device.id,{method:'DELETE',headers:{'X-CSRF-Token':form.elements.csrf.value}});if(r.ok)await loadDevices();else message.textContent='Chưa thể bỏ liên kết thiết bị.'};row.append(info,remove);list.append(row)}
+}
+form.addEventListener('submit',async event=>{event.preventDefault();const response=await fetch('/api/devices',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csrf:form.elements.csrf.value,name:form.elements.name.value,mac:form.elements.mac.value,sid:form.elements.sid.value})});const data=await response.json();message.textContent=data.ok?'Đã lưu thiết bị.':data.error||'Chưa thể lưu thiết bị.';if(data.ok)await loadDevices()});
+document.getElementById('read-device').onclick=async()=>{
+ if(!('serial' in navigator)){message.textContent='Dùng Chrome hoặc Edge desktop trên HTTPS hoặc localhost để đọc USB.';return}
+ let port,reader,timeout;const button=document.getElementById('read-device');button.disabled=true;
+ try{port=await navigator.serial.requestPort();await port.open({baudRate:115200});reader=port.readable.getReader();timeout=setTimeout(()=>reader.cancel(),10000);message.textContent='Đang đọc log, hãy nhấn RESET nếu cần…';let text='';while(true){const{value,done}=await reader.read();if(done)break;text=(text+new TextDecoder().decode(value)).slice(-20000);const mac=text.match(/\b(?:[0-9A-F]{2}:){5}[0-9A-F]{2}\b/i),sid=text.match(/(?:session[_ -]?id|uuid|sid)\s*[:=]\s*([A-Za-z0-9._:-]{8,80})/i);if(mac)form.elements.mac.value=mac[0].toUpperCase();if(sid)form.elements.sid.value=sid[1];if(mac){message.textContent='Đã đọc MAC. Nhấn Lưu thiết bị để xác nhận.';break}}if(!form.elements.mac.value)message.textContent='Không thấy MAC trong log. Bạn có thể nhập thủ công.'}catch{message.textContent='Không đọc được cổng USB; kiểm tra cáp và đóng ứng dụng đang giữ cổng.'}finally{clearTimeout(timeout);if(reader){try{await reader.cancel()}catch{}try{reader.releaseLock()}catch{}}if(port){try{await port.close()}catch{}}button.disabled=false}
+};
+loadDevices().catch(()=>message.textContent='Chưa tải được danh sách thiết bị.');

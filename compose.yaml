@@ -1,0 +1,33 @@
+name: th-esp32
+services:
+  web:
+    build: .
+    image: ${APP_IMAGE:-th-esp32:local}
+    init: true
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    environment:
+      DATA_DIR: /data
+      PUBLIC_URL: ${PUBLIC_URL:-http://localhost:5081}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI:-}
+      FLASK_SECRET_KEY: ${FLASK_SECRET_KEY:-}
+      TRUST_PROXY: ${TRUST_PROXY:-0}
+      ADMIN_EMAILS: ${ADMIN_EMAILS:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4.1-mini}
+      YOUTUBE_API_KEY: ${YOUTUBE_API_KEY:-}
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:${PORT:-5081}:5000"
+    volumes:
+      - data:/data
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: "3"}
+volumes:
+  data:

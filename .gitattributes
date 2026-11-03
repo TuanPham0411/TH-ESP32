@@ -1,0 +1,9 @@
+* text=auto
+*.sh text eol=lf
+Dockerfile text eol=lf
+*.yaml text eol=lf
+*.bin binary
+*.zip binary
+*.png binary
+# Generated bundles contain whitespace inside JS template literals; preserve exact output.
+app/static/vendor/** -whitespace
