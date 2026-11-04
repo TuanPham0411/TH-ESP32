@@ -1,0 +1,39 @@
+name: Deploy ESP to th-server
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_sha:
+        description: Full SHA of a successfully published image
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-esp-th-server
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, Linux, ARM64, th-server-esp32]
+    timeout-minutes: 15
+
+    steps:
+      - name: Deploy selected image
+        shell: bash
+        env:
+          IMAGE_SHA: ${{ inputs.image_sha }}
+        run: |
+          set -euo pipefail
+          [[ "$IMAGE_SHA" =~ ^[0-9a-f]{40}$ ]]
+
+          cd /srv/th-esp32/app
+          test -r .env
+          export APP_IMAGE="ghcr.io/tuanpham0411/th-esp32:$IMAGE_SHA"
+
+          docker compose config --quiet
+          docker compose pull web
+          docker compose up -d --no-build --wait --wait-timeout 180
+          python3 tools/smoke.py
