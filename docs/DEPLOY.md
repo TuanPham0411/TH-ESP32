@@ -20,3 +20,5 @@ Không dùng `docker compose down -v` trừ khi chủ ý xóa toàn bộ ngườ
 SQLite không được chia sẻ qua NFS hay cho nhiều replica ghi cùng lúc. Một container Gunicorn, một volume riêng là cấu hình được hỗ trợ. Với bind mount thay named volume, tạo thư mục và cấp quyền UID 10001 trước. Giữ replica cũ và backup để rollback; nếu bản mới đã ghi dữ liệu, không đổi về DB cũ mà bỏ mất các thay đổi vừa phát sinh.
 
 Tệp `.env` chỉ nằm trên máy triển khai. Có thể dùng secret manager của nền tảng để đưa các biến tương tự vào process; không cần copy `.env` vào image.
+
+Hostname mới: `https://esp.th.io.vn`; Google redirect URI: `https://esp.th.io.vn/auth/callback`. Cấu hình `PUBLIC_URL` tương ứng trong `.env`, giữ backend/volume độc lập.

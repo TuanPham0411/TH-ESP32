@@ -1,5 +1,7 @@
 # TH-ESP32 — XiaoZhi độc lập
 
+Hostname triển khai: **https://esp.th.io.vn**. Đặt `PUBLIC_URL=https://esp.th.io.vn` và đăng ký Google callback `https://esp.th.io.vn/auth/callback`.
+
 Website và API tự chứa cho XiaoZhi Copper Robot ESP32-S3: hướng dẫn phần cứng, Web Serial installer, firmware/gói offline, tài khoản Google, quản lý thiết bị và tám công cụ Internet. Không dùng backend, database, Google callback hoặc hostname của portal cũ.
 
 **Mọi tính năng công khai đều miễn phí.** Tải xuống, cài firmware và gọi API công cụ không cần đăng nhập, bearer key, gói dịch vụ hoặc mở khóa. Đăng nhập Google chỉ phục vụ hồ sơ và danh sách thiết bị riêng của bạn.
